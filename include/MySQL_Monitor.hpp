@@ -235,6 +235,7 @@ class MySQL_Monitor {
 	pthread_mutex_t group_replication_mutex; // for simplicity, a mutex instead of a rwlock
 	pthread_mutex_t galera_mutex; // for simplicity, a mutex instead of a rwlock
 	pthread_mutex_t aws_aurora_mutex; // for simplicity, a mutex instead of a rwlock
+	pthread_mutex_t ping_log_mutex;
 	//std::map<char *, MyGR_monitor_node *, cmp_str> Group_Replication_Hosts_Map;
 	std::map<std::string, MyGR_monitor_node *> Group_Replication_Hosts_Map;
 	SQLite3_result *Group_Replication_Hosts_resultset;
@@ -276,7 +277,6 @@ class MySQL_Monitor {
 	void populate_monitor_mysql_server_galera_log();
 	void populate_monitor_mysql_server_aws_aurora_log();
 	void populate_monitor_mysql_server_aws_aurora_check_status();
-	char * galera_find_last_node(int);
 	std::vector<string> * galera_find_possible_last_nodes(int);
 	bool server_responds_to_ping(char *address, int port);
 	// FIXME : add AWS Aurora actions
