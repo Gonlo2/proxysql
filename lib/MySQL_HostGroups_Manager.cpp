@@ -1229,8 +1229,6 @@ bool MySQL_HostGroups_Manager::commit() {
 
 	unsigned long long curtime1=monotonic_time();
 	wrlock();
-	// purge table
-	purge_mysql_servers_table();
 
 	proxy_debug(PROXY_DEBUG_MYSQL_CONNPOOL, 4, "DELETE FROM mysql_servers\n");
 	mydb->execute("DELETE FROM mysql_servers");
@@ -1617,6 +1615,8 @@ bool MySQL_HostGroups_Manager::commit() {
 		pthread_mutex_unlock(&GloVars.checksum_mutex);
 	}
 
+	cleanup_internal_mysql_servers_list();
+
 	ev_async_send(gtid_ev_loop, gtid_ev_async);
 
 	__sync_fetch_and_add(&status.servers_table_version,1);
@@ -1729,7 +1729,7 @@ void MySQL_HostGroups_Manager::generate_mysql_gtid_executed_tables() {
 	pthread_rwlock_unlock(&gtid_rwlock);
 }
 
-void MySQL_HostGroups_Manager::purge_mysql_servers_table() {
+void MySQL_HostGroups_Manager::cleanup_internal_mysql_servers_list() {
 	for (unsigned int i=0; i<MyHostGroups->len; i++) {
 		MyHGC *myhgc=(MyHGC *)MyHostGroups->index(i);
 		MySrvC *mysrvc=NULL;
@@ -2117,9 +2117,6 @@ void MySQL_HostGroups_Manager::generate_mysql_galera_hostgroups_table() {
 
 SQLite3_result * MySQL_HostGroups_Manager::dump_table_mysql_servers() {
 	wrlock();
-
-	// purge table
-	purge_mysql_servers_table();
 
 	proxy_debug(PROXY_DEBUG_MYSQL_CONNPOOL, 4, "DELETE FROM mysql_servers\n");
 	mydb->execute("DELETE FROM mysql_servers");

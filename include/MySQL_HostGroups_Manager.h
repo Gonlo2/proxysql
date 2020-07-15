@@ -278,7 +278,7 @@ class MySQL_HostGroups_Manager {
 	MyHGC * MyHGC_create(unsigned int);
 
 	void add(MySrvC *, unsigned int);
-	void purge_mysql_servers_table();
+	void cleanup_internal_mysql_servers_list();
 	void generate_mysql_servers_table(int *_onlyhg=NULL);
 	void generate_mysql_replication_hostgroups_table();
 	Galera_Info *get_galera_node_info(int hostgroup);
