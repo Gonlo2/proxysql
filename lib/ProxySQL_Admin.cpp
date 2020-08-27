@@ -9759,7 +9759,7 @@ void ProxySQL_Admin::load_mysql_servers_to_runtime() {
 	if (error) {
 		proxy_error("Error on %s : %s\n", query, error);
 	} else {
-		MyHGM->unsafe_servers_add(resultset);
+		MyHGM->servers_add_locked(resultset);
 	}
 	if (resultset) delete resultset;
 	resultset=NULL;
@@ -9787,7 +9787,7 @@ void ProxySQL_Admin::load_mysql_servers_to_runtime() {
 		proxy_error("Error on %s : %s\n", query, error);
 	} else {
 		// Pass the resultset to MyHGM
-		MyHGM->unsafe_set_incoming_replication_hostgroups(resultset_replication);
+		MyHGM->set_incoming_replication_hostgroups_locked(resultset_replication);
 	}
 	//if (resultset) delete resultset;
 	//resultset=NULL;
@@ -9816,7 +9816,7 @@ void ProxySQL_Admin::load_mysql_servers_to_runtime() {
 		proxy_error("Error on %s : %s\n", query, error);
 	} else {
 		// Pass the resultset to MyHGM
-		MyHGM->unsafe_set_incoming_group_replication_hostgroups(resultset_group_replication);
+		MyHGM->set_incoming_group_replication_hostgroups_locked(resultset_group_replication);
 	}
 
 	// support for Galera, table mysql_galera_hostgroups
@@ -9843,7 +9843,7 @@ void ProxySQL_Admin::load_mysql_servers_to_runtime() {
 		proxy_error("Error on %s : %s\n", query, error);
 	} else {
 		// Pass the resultset to MyHGM
-		MyHGM->unsafe_set_incoming_galera_hostgroups(resultset_galera);
+		MyHGM->set_incoming_galera_hostgroups_locked(resultset_galera);
 	}
 
 	// support for AWS Aurora, table mysql_aws_aurora_hostgroups
@@ -9874,10 +9874,10 @@ void ProxySQL_Admin::load_mysql_servers_to_runtime() {
 		proxy_error("Error on %s : %s\n", query, error);
 	} else {
 		// Pass the resultset to MyHGM
-		MyHGM->unsafe_set_incoming_aws_aurora_hostgroups(resultset_aws_aurora);
+		MyHGM->set_incoming_aws_aurora_hostgroups_locked(resultset_aws_aurora);
 	}
 	// commit all the changes
-	MyHGM->unsafe_commit();
+	MyHGM->commit_locked();
 
 	MyHGM->wrunlock();
 
